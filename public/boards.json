@@ -1,0 +1,137 @@
+{
+  "boards": [
+    {
+      "board": "Inkplate 10",
+      "display_width": 1200,
+      "display_height": 825,
+      "modes": [
+        {
+          "id": "Black & White (1 bit)",
+          "bpp": 1,
+          "defaults": { "threshold": 128, "invert": false }
+        },
+        {
+          "id": "Grayscale (3 bit)",
+          "bpp": 3,
+          "levels": 8,
+          "defaults": { "invert": false, "dither": "none" }
+        }
+      ],
+      "ui_defaults": { "resize": "fit" }
+    },
+    {
+      "board": "Inkplate 6MOTION",
+      "display_width": 1024,
+      "display_height": 758,
+      "modes": [
+        {
+          "id": "Black & White (1 bit)",
+          "bpp": 1,
+          "defaults": { "threshold": 128, "invert": false }
+        },
+        {
+          "id": "Grayscale (4 bit)",
+          "bpp": 4,
+          "levels": 16,
+          "defaults": { "threshold": 128, "invert": false }
+        }
+      ],
+      "ui_defaults": { "resize": "fit" }
+    },
+    {
+      "board": "Inkplate 6FLICK",
+      "display_width": 1024,
+      "display_height": 758,
+      "modes": [
+        {
+          "id": "Black & White (1 bit)",
+          "bpp": 1,
+          "defaults": { "threshold": 128, "invert": false }
+        },
+        {
+          "id": "Grayscale (3 bit)",
+          "bpp": 3,
+          "levels": 8,
+          "defaults": { "invert": false, "dither": "none" }
+        }
+      ],
+      "ui_defaults": { "resize": "fit" }
+    },
+    {
+      "board": "Inkplate 6",
+      "display_width": 800,
+      "display_height": 600,
+      "modes": [
+        {
+          "id": "Black & White (1 bit)",
+          "bpp": 1,
+          "defaults": { "threshold": 128, "invert": false }
+        },
+        {
+          "id": "Grayscale (3 bit)",
+          "bpp": 3,
+          "levels": 8,
+          "defaults": { "invert": false, "dither": "none" }
+        }
+      ],
+      "ui_defaults": { "resize": "fit" }
+    },
+    {
+      "board": "Inkplate 5v2",
+      "display_width": 1280,
+      "display_height": 720,
+      "modes": [
+        {
+          "id": "Black & White (1 bit)",
+          "bpp": 1,
+          "defaults": { "threshold": 128, "invert": false }
+        },
+        {
+          "id": "Grayscale (3 bit)",
+          "bpp": 3,
+          "levels": 8,
+          "defaults": { "invert": false, "dither": "none" }
+        }
+      ],
+      "ui_defaults": { "resize": "fit" }
+    },
+    {
+      "board": "Inkplate 4TEMPERA",
+      "display_width": 600,
+      "display_height": 600,
+      "modes": [
+        {
+          "id": "Black & White (1 bit)",
+          "bpp": 1,
+          "defaults": { "threshold": 128, "invert": false }
+        },
+        {
+          "id": "Grayscale (3 bit)",
+          "bpp": 3,
+          "levels": 8,
+          "defaults": { "invert": false, "dither": "none" }
+        }
+      ],
+      "ui_defaults": { "resize": "fit" }
+    },
+    {
+      "board": "Inkplate 2",
+      "display_width": 212,
+      "display_height": 104,
+      "modes": [
+        {
+          "id": "Black & White (1 bit)",
+          "bpp": 1,
+          "defaults": { "threshold": 128, "invert": false, "dither": "none" }
+        },
+        {
+          "id": "White, Black & Red",
+          "bpp": 2,
+          "levels": 3,
+          "defaults": { "invert": false, "dither": "none" }
+        }
+      ],
+      "ui_defaults": { "resize": "fit" }
+    }
+  ]
+}
