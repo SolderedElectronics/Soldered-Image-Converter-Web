@@ -55,18 +55,37 @@ export default function App() {
   const [current, setCurrent] = useState(0);
   const [constrain, setConstrain] = useState(false);
 
+  // NEW: global defaults while there are no items (used by Start screen)
+  const [defaultBoardIdx, setDefaultBoardIdx] = useState(0);
+  const [defaultModeId, setDefaultModeId] = useState<string>("");
+  const [defaultResize, setDefaultResize] = useState<ResizeMode>("fit");
+
   const itemsRef = useRef(items);
   const currentRef = useRef(current);
   const boardsRef = useRef(boards);
-  useEffect(() => { itemsRef.current = items; }, [items]);
-  useEffect(() => { currentRef.current = current; }, [current]);
-  useEffect(() => { boardsRef.current = boards; }, [boards]);
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
+  useEffect(() => {
+    currentRef.current = current;
+  }, [current]);
+  useEffect(() => {
+    boardsRef.current = boards;
+  }, [boards]);
 
   useEffect(() => {
     (async () => {
       const resp = await fetch("/boards.json");
       const j: BoardsFile = await resp.json();
       setBoards(j.boards);
+
+      // init global defaults from first board
+      const b0 = j.boards?.[0];
+      if (b0) {
+        setDefaultBoardIdx(0);
+        setDefaultModeId(b0.modes?.[0]?.id ?? "");
+        setDefaultResize((b0.ui_defaults?.resize ?? "fit") as ResizeMode);
+      }
     })();
   }, []);
 
@@ -189,13 +208,18 @@ export default function App() {
     setStatusText("Loading images…");
     setBusy(true);
 
-    const b0 = boardsRef.current[0];
-    const defaultBoardIdx = 0;
-    const defaultBoard = b0 ?? boardsRef.current[defaultBoardIdx];
-    const defaultModeId = defaultBoard?.modes?.[0]?.id ?? "Black & White (1 bit)";
-    const defaultResize: ResizeMode = (defaultBoard?.ui_defaults?.resize ?? "fit") as ResizeMode;
-
+    // Use per-image template if exists, otherwise use global defaults (from Start screen)
     const template = itemsRef.current[currentRef.current];
+    const boardForDefaults =
+      boardsRef.current[template?.boardIdx ?? defaultBoardIdx];
+
+    const resolvedBoardIdx = template?.boardIdx ?? defaultBoardIdx;
+    const resolvedModeId =
+      template?.modeId ??
+      (boardForDefaults?.modes?.[0]?.id ?? defaultModeId);
+    const resolvedResize: ResizeMode =
+      (template?.resizeMode ??
+        (boardForDefaults?.ui_defaults?.resize ?? defaultResize)) as ResizeMode;
 
     const newItems: Item[] = [];
     for (const f of list) {
@@ -214,9 +238,9 @@ export default function App() {
         dither: template?.dither ?? "none",
         invert: template?.invert ?? false,
 
-        boardIdx: template?.boardIdx ?? defaultBoardIdx,
-        modeId: template?.modeId ?? defaultModeId,
-        resizeMode: template?.resizeMode ?? defaultResize,
+        boardIdx: resolvedBoardIdx,
+        modeId: resolvedModeId,
+        resizeMode: resolvedResize,
         customWidth: template?.customWidth ?? null,
         customHeight: template?.customHeight ?? null,
       });
@@ -258,7 +282,7 @@ export default function App() {
   }
 
   const it = items[current];
-  const board = boards[it?.boardIdx ?? 0];
+  const board = boards[it?.boardIdx ?? defaultBoardIdx] || boards[0];
   const modes = board?.modes ?? [];
   const baseW = board?.display_width ?? 0;
   const baseH = board?.display_height ?? 0;
@@ -277,6 +301,17 @@ export default function App() {
   }
 
   function handleBoardChange(newBoardIdx: number) {
+    if (itemsRef.current.length === 0) {
+      // Start screen: change global defaults (so first upload uses this)
+      const brd = boardsRef.current[newBoardIdx];
+      setDefaultBoardIdx(newBoardIdx);
+      setDefaultModeId(brd?.modes?.[0]?.id ?? "");
+      setDefaultResize((brd?.ui_defaults?.resize ?? "fit") as ResizeMode);
+      setStatusText(`Default board set: ${brd?.board ?? ""}`);
+      return;
+    }
+
+    // Editor screen: patch current item
     const brd = boardsRef.current[newBoardIdx];
     const firstModeId = brd?.modes?.[0]?.id ?? it?.modeId ?? "";
     patchCurrentItem({
@@ -389,7 +424,9 @@ export default function App() {
         onConvert: () => {},
       };
 
-  const selectedBoardIdxForHeader = it?.boardIdx ?? 0;
+  // Header select shows current item's board if items exist, otherwise global default
+  const selectedBoardIdxForHeader =
+    items.length > 0 ? (it?.boardIdx ?? 0) : defaultBoardIdx;
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
