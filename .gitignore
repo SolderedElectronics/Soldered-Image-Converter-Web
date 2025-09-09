@@ -48,3 +48,9 @@ coverage/
 
 # Generated files
 *.h
+
+# Local deployment script
+Deploy-SolderedImageConverter.ps1
+
+# Ignore all deployment scripts
+*.ps1

@@ -145,7 +145,7 @@ export function Footer() {
           aria-label="Go to Soldered homepage"
         >
           <img
-            src="/img/Soldered-logo-color.png"
+            src={`${import.meta.env.BASE_URL}img/Soldered-logo-color.png`}
             alt="Soldered logo"
             className="h-10 object-contain opacity-50 hover:opacity-100"
           />

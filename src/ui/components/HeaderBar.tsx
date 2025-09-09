@@ -20,7 +20,7 @@ export function HeaderBar({
         {/* LEFT: logo */}
         <div className="flex items-center gap-3">
           <img
-            src={logoSrc}
+            src={`${import.meta.env.BASE_URL}img/logo.png`}
             alt="Soldered Image Converter"
             className="h-10 md:h-12 object-contain"
           />

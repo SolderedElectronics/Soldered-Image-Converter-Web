@@ -75,19 +75,28 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
-      const resp = await fetch("/boards.json");
-      const j: BoardsFile = await resp.json();
-      setBoards(j.boards);
-
-      // init global defaults from first board
-      const b0 = j.boards?.[0];
-      if (b0) {
-        setDefaultBoardIdx(0);
-        setDefaultModeId(b0.modes?.[0]?.id ?? "");
-        setDefaultResize((b0.ui_defaults?.resize ?? "fit") as ResizeMode);
+      try {
+        const base = import.meta.env.BASE_URL || "/";
+        const resp = await fetch(`${base}boards.json`, { cache: "no-cache" });
+        if (!resp.ok) throw new Error(`Failed to load boards.json (${resp.status})`);
+      
+        const j: BoardsFile = await resp.json();
+        setBoards(j.boards);
+      
+        // init global defaults from first board
+        const b0 = j.boards?.[0];
+        if (b0) {
+          setDefaultBoardIdx(0);
+          setDefaultModeId(b0.modes?.[0]?.id ?? "");
+          setDefaultResize((b0.ui_defaults?.resize ?? "fit") as ResizeMode);
+        }
+      } catch (err) {
+        console.error("Error loading boards.json:", err);
+        setBoards([]);
       }
     })();
   }, []);
+
 
   function setItemsAndRef(next: Item[]) {
     itemsRef.current = next;

@@ -10,7 +10,8 @@
 "resolveJsonModule": true,
 "isolatedModules": true,
 "noEmit": true,
-"strict": true
+"strict": true,
+"types": ["node"]
 },
 "include": ["src"]
 }
