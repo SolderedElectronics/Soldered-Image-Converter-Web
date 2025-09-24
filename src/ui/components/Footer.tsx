@@ -158,8 +158,10 @@ export function Footer() {
         <span className="text-sm">Copyright © 2025 Soldered. All rights reserved.</span>
       </div>
 
-      {/* Version bottom-right */}
-      <span className="absolute bottom-2 right-4 text-s text-gray-500">v1.0.0</span>
+      {/* Version bottom-right (dynamic) */}
+      <span className="absolute bottom-2 right-4 text-s text-gray-500">
+        {"v" + __APP_VERSION__}{__GIT_HASH__ ? ` (${__GIT_HASH__})` : ""}
+      </span>
     </footer>
   );
 }
