@@ -30,7 +30,7 @@ export async function runPipeline(req: ConvertRequest): Promise<ConvertResult> {
     gray = invertGray(gray);
   }
 
-  const bpp = mode.bpp as 1 | 2 | 3 | 4;
+  const bpp = mode.bpp as 1 | 2 | 3 | 4 | 5;
 
   switch (bpp) {
     case 1: {
@@ -89,6 +89,37 @@ export async function runPipeline(req: ConvertRequest): Promise<ConvertResult> {
       const buffer = pack4bppHighFirst(q, targetW, targetH, false);
       return done(buffer, imgData, targetW, targetH, 4, mode.id);
     }
+
+    case 5: {
+      if ((mode as any)?.levels === 7) {
+        const PAL_6COLOR: [number, number, number, number][] = [
+          [0,   0,   0,   255], // 0 black
+          [255, 255, 255, 255], // 1 white
+          [0,   255, 0,   255], // 2 green
+          [0,   0,   255, 255], // 3 blue
+          [255, 0,   0,   255], // 4 red
+          [255, 255, 0,   255], // 5 yellow
+          [255, 165, 0,   255], // 6 orange
+        ];
+
+        const invertRGBBefore = !!params.invert;
+        const kernel = normalizeColorKernel(params.dither as string);
+
+        const idx =
+          kernel === "none"
+            ? quantizeToPalette(rgba, targetW, targetH, PAL_6COLOR, invertRGBBefore)
+            : colorDitherToPalette(rgba, targetW, targetH, kernel, PAL_6COLOR, invertRGBBefore);
+
+        paintPalettePreviewRGBA(imgData.data, idx, PAL_6COLOR);
+
+        const buffer = pack3bppHighFirstFromIndex(idx, targetW, targetH);
+
+        return done(buffer, imgData, targetW, targetH, 4, mode.id);
+      }
+
+      break;
+    }
+
   }
 
   throw new Error(`Unsupported bpp mode: ${String((mode as Mode).bpp)}`);
