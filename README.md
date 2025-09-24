@@ -1,6 +1,6 @@
 # Soldered Image Converter
 
-The **Soldered Image Converter** is a free, web-based tool that lets you prepare and convert images for use with [Inkplate displays](https://soldered.com/inkplate) and other supported boards.  
+The [**Soldered Image Converter**](https://soldered.com/image-converter/) is a free, web-based tool that lets you prepare and convert images for use with [Inkplate displays](https://soldered.com/inkplate) and other supported boards.  
 It’s designed to be simple, fast, and optimized for makers who want to quickly turn images into C header files ready for their projects.
 
 ---
