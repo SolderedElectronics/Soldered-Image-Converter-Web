@@ -22,6 +22,7 @@ It’s designed to be simple, fast, and optimized for makers who want to quickly
   - 2-bit (Black/White/Red)
   - 3-bit grayscale
   - 4-bit grayscale
+  - Color (7-color palette)
 
 - **Image Processing Controls**  
   - Resize modes: **Fit**, **Fill**, or **Stretch**
