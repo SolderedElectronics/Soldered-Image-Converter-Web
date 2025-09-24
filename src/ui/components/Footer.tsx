@@ -102,8 +102,8 @@ export function Footer() {
               </a>
             </li>
             <li>
-              <a className="flex items-center gap-1 hover:underline" href="https://soldered.com/documentation/inkplate/6/quick-start-guide/" target="_blank" rel="noreferrer">
-                Inkplate 6 <ExternalIcon />
+              <a className="flex items-center gap-1 hover:underline" href="https://soldered.com/documentation/inkplate/6motion/quick-start-guide/" target="_blank" rel="noreferrer">
+                Inkplate 6MOTION <ExternalIcon />
               </a>
             </li>
             <li>
@@ -112,8 +112,13 @@ export function Footer() {
               </a>
             </li>
             <li>
-              <a className="flex items-center gap-1 hover:underline" href="https://soldered.com/documentation/inkplate/6motion/quick-start-guide/" target="_blank" rel="noreferrer">
-                Inkplate 6MOTION <ExternalIcon />
+              <a className="flex items-center gap-1 hover:underline" href="https://soldered.com/documentation/inkplate/6color/quick-start-guide/" target="_blank" rel="noreferrer">
+                Inkplate 6COLOR <ExternalIcon />
+              </a>
+            </li>
+            <li>
+              <a className="flex items-center gap-1 hover:underline" href="https://soldered.com/documentation/inkplate/6/quick-start-guide/" target="_blank" rel="noreferrer">
+                Inkplate 6 <ExternalIcon />
               </a>
             </li>
             <li>

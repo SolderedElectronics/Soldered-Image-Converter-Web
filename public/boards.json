@@ -58,6 +58,16 @@
       "ui_defaults": { "resize": "fit" }
     },
     {
+      "board": "Inkplate 6COLOR",
+      "display_width": 600,
+      "display_height": 448,
+      "modes": [
+        { "id": "Color (7-color palette)", "bpp": 5, "levels": 7,
+          "defaults": { "invert": false, "dither": "floyd-steinberg" } }
+      ],
+      "ui_defaults": { "resize": "fit" }
+    },
+    {
       "board": "Inkplate 6",
       "display_width": 800,
       "display_height": 600,
