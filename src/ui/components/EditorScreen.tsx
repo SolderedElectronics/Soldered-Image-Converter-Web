@@ -13,6 +13,11 @@ export function EditorScreen(props: {
   onReset: () => void;
   onPreviewRendered?: () => void;
 
+  // NOVO: MicroPython
+  onSavePy: () => void;
+  codeMode: "arduino" | "micropython";
+  onToggleMode: () => void;
+
   // NEW: multi-image navigation
   itemsCount: number;
   currentIndex: number;
@@ -28,6 +33,11 @@ export function EditorScreen(props: {
     onSaveAll,
     onReset,
     onPreviewRendered,
+    // NOVO:
+    onSavePy,
+    codeMode,
+    onToggleMode,
+    // NAV
     itemsCount,
     currentIndex,
     onPrev,
@@ -110,6 +120,10 @@ export function EditorScreen(props: {
               onSaveHeader={onSaveHeader}
               onSaveAll={onSaveAll}
               onReset={onReset}
+              // NOVO: toggle + .py download
+              codeMode={codeMode}
+              onToggleMode={onToggleMode}
+              onSavePy={onSavePy}
             />
           </div>
         </aside>
@@ -126,6 +140,10 @@ export function EditorScreen(props: {
               onSaveHeader={onSaveHeader}
               onSaveAll={onSaveAll}
               onReset={onReset}
+              // NOVO: toggle + .py download
+              codeMode={codeMode}
+              onToggleMode={onToggleMode}
+              onSavePy={onSavePy}
             />
           </div>
         </section>

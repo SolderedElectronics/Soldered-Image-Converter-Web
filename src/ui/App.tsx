@@ -14,6 +14,7 @@ import { writeCArray } from "../core/writers/carray";
 import { downloadBlob } from "../lib/util";
 import type { DitherUI } from "./components/Controls";
 import { Footer } from "./components/Footer";
+import { writePythonInkplateModule } from "../core/writers/python_mpy";
 
 const worker = new Worker(
   new URL("../workers/converter.worker.ts", import.meta.url),
@@ -54,6 +55,9 @@ export default function App() {
   const [items, setItems] = useState<Item[]>([]);
   const [current, setCurrent] = useState(0);
   const [constrain, setConstrain] = useState(false);
+
+  // NOVO: način snippeta (Arduino | MicroPython)
+  const [codeMode, setCodeMode] = useState<"arduino" | "micropython">("arduino");
 
   // NEW: global defaults while there are no items (used by Start screen)
   const [defaultBoardIdx, setDefaultBoardIdx] = useState(0);
@@ -276,6 +280,14 @@ export default function App() {
     setStatusText("Saved header!");
   }
 
+  function savePy(it: Item) {
+    if (!it.buffer || !it.meta) return;
+    const base = it.name || `image_${Date.now()}`;
+    const blob = writePythonInkplateModule(base, it.buffer, it.meta.width, it.meta.height, 16, true);
+    downloadBlob(blob, `${base}.py`);
+    setStatusText("Saved Python!");
+  }
+
   function onSaveAll() {
     items.forEach(it => (it.buffer && it.meta ? saveHeader(it) : null));
   }
@@ -296,11 +308,21 @@ export default function App() {
   const baseW = board?.display_width ?? 0;
   const baseH = board?.display_height ?? 0;
 
-  const codeText = useMemo(() => {
+  // --- Oba teksta pa biramo prema codeMode ---
+  const headerText = useMemo(() => {
     if (!it?.buffer || !it?.meta) return "";
     const storedBpp = it.meta.bpp === 3 ? 4 : it.meta.bpp;
     return cArrayString(it.name, it.buffer, it.meta.width, it.meta.height, storedBpp);
   }, [it?.buffer, it?.meta, it?.name]);
+
+  const pythonText = useMemo(() => {
+    if (!it?.buffer || !it?.meta) return "";
+    return buildPythonPreview(it.name, it.buffer, it.meta.width, it.meta.height);
+  }, [it?.buffer, it?.meta, it?.name]);
+
+  const codeText = useMemo(() => {
+    return codeMode === "arduino" ? headerText : pythonText;
+  }, [codeMode, headerText, pythonText]);
 
   function onCopy() {
     if (!codeText) return;
@@ -459,6 +481,11 @@ export default function App() {
             onSaveHeader={() => it && saveHeader(it)}
             onSaveAll={onSaveAll}
             onReset={onReset}
+            // NOVO: MicroPython .py download
+            onSavePy={() => it && savePy(it)}
+            // NOVO: toggle stanje + handler
+            codeMode={codeMode}
+            onToggleMode={() => setCodeMode(m => (m === "arduino" ? "micropython" : "arduino"))}
             itemsCount={items.length}
             currentIndex={current}
             onPrev={goPrev}
@@ -502,5 +529,30 @@ function cArrayString(
     `};`,
     `const uint16_t ${name}_w = ${w};`,
     `const uint16_t ${name}_h = ${h};`,
+  ].join("\n");
+}
+
+function buildPythonPreview(
+  name: string,
+  data: Uint8Array,
+  w: number,
+  h: number
+): string {
+  const hex = Array.from(data).map(v => `0x${v.toString(16).toUpperCase().padStart(2, "0")}`);
+  const lines: string[] = [];
+  for (let i = 0; i < hex.length; i += 16)
+    lines.push("    " + hex.slice(i, i + 16).join(", "));
+  return [
+    `# Auto-generated from Soldered Image Converter`,
+    `# 1bpp row-major, MSB-first ready for Inkplate.drawBitmap`,
+    `${name}_W = ${w}`,
+    `${name}_H = ${h}`,
+    `${name} = bytes([`,
+    lines.join(",\n"),
+    `])`,
+    ``,
+    `def draw_${name}(ink, x=0, y=0, invert=False):`,
+    `    data = ${name} if not invert else bytes((b ^ 0xFF) for b in ${name})`,
+    `    ink.drawBitmap(x, y, data, ${name}_W, ${name}_H)`,
   ].join("\n");
 }
