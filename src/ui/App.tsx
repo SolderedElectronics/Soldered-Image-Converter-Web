@@ -544,7 +544,6 @@ function buildPythonPreview(
     lines.push("    " + hex.slice(i, i + 16).join(", "));
   return [
     `# Auto-generated from Soldered Image Converter`,
-    `# 1bpp row-major, MSB-first ready for Inkplate.drawBitmap`,
     `${name}_W = ${w}`,
     `${name}_H = ${h}`,
     `${name} = bytes([`,
