@@ -543,7 +543,6 @@ function buildPythonPreview(
   for (let i = 0; i < hex.length; i += 16)
     lines.push("    " + hex.slice(i, i + 16).join(", "));
   return [
-    `# Auto-generated from Soldered Image Converter`,
     `${name}_W = ${w}`,
     `${name}_H = ${h}`,
     `${name} = bytes([`,

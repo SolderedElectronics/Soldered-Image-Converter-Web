@@ -19,7 +19,7 @@ def draw_${name}(ink, x=0, y=0, invert=False):
     ink.drawBitmap(x, y, data, ${name}_W, ${name}_H)
 ` : "";
 
-  const module = `# Auto-generated from Soldered Image Converter
+  const module = `
 ${name}_W = ${w}
 ${name}_H = ${h}
 ${name} = bytes([
